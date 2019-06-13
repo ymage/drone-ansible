@@ -102,6 +102,7 @@ steps:
     settings:
       auto_tag: true
       force_tag: true
+      dockerfile: docker/Dockerfile.linux.amd64
       username:
         from_secret: docker_username
       password:
