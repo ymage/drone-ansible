@@ -1,14 +1,28 @@
-FROM plugins/base:linux-amd64
+# Pull base image
+FROM python:3.7.3-alpine3.9
+LABEL maintainer="Ymage"
 
-LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" \
-  org.label-schema.name="Drone Ansible" \
-  org.label-schema.vendor="Drone.IO Community" \
-  org.label-schema.schema-version="1.0"
+RUN ln -s /lib /lib64 && \
+    apk add --upgrade --no-cache \
+      ca-certificates\
+      curl \
+      git \
+      mailcap \
+      openssh-client \
+      openssl \
+      rsync \
+      zip && \
+    apk add --upgrade --no-cache --virtual build-dependencies \
+      build-base \
+      libffi-dev \
+      openssl-dev \
+      python3-dev
 
-RUN apk add --no-cache bash git curl rsync openssh-client py-pip py-requests python2-dev libffi-dev libressl-dev build-base && \
-  pip install -U pip && \
-  pip install ansible==2.7.6 && \
-  apk del python2-dev libffi-dev libressl-dev build-base
+# Ansible installation
+COPY requirements.txt /opt/
+RUN python3 -m pip install --no-cache-dir --upgrade --requirement /opt/requirements.txt && \
+    apk del build-dependencies && \
+    rm -rf /var/cache/apk/*
 
 ADD release/linux/amd64/drone-ansible /bin/
 ENTRYPOINT ["/bin/drone-ansible"]

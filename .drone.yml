@@ -106,7 +106,7 @@ steps:
     dockerfile: docker/Dockerfile.linux.amd64
     password:
       from_secret: docker_password
-    repo: plugins/ansible
+    repo: ymage/drone-ansible
     username:
       from_secret: docker_username
   when:
