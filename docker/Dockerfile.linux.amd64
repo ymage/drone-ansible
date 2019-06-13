@@ -4,10 +4,9 @@ LABEL maintainer="Ymage"
 
 RUN ln -s /lib /lib64 && \
     apk add --upgrade --no-cache \
-      ca-certificates\
+      ca-certificates \
       curl \
       git \
-      mailcap \
       openssh-client \
       openssl \
       rsync \
@@ -22,7 +21,12 @@ RUN ln -s /lib /lib64 && \
 COPY requirements.txt /opt/
 RUN python3 -m pip install --no-cache-dir --upgrade --requirement /opt/requirements.txt && \
     apk del build-dependencies && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* && \
+    mkdir -p ~/.ssh && \
+    echo $'Host *\nStrictHostKeyChecking no' > ~/.ssh/config && \
+    chmod 400 ~/.ssh/config
+
+ENV PYTHONPATH=/usr/local/lib/python3.7/site-packages:$PYTHONPATH
 
 ADD release/linux/amd64/drone-ansible /bin/
 ENTRYPOINT ["/bin/drone-ansible"]
