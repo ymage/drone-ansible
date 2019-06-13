@@ -83,15 +83,14 @@ steps:
   pull: always
   image: plugins/docker:linux-amd64
   settings:
-    daemon_off: false
     dockerfile: docker/Dockerfile.linux.amd64
     dry_run: true
+    username:
+      from_secret: docker_username
     password:
       from_secret: docker_password
     repo: ymage/drone-ansible
     tags: linux-amd64
-    username:
-      from_secret: docker_username
   when:
     event:
     - pull_request
