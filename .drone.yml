@@ -52,8 +52,7 @@ steps:
     pull: always
     image: golang:1.11
     commands:
-      - >-
-        "go build -v -ldflags \"-X main.version=${DRONE_COMMIT_SHA:0:8}\"
+      - "go build -v -ldflags \"-X main.version=${DRONE_COMMIT_SHA:0:8}\" \
         -a -tags netgo -o release/linux/amd64/drone-ansible"
     environment:
       CGO_ENABLED: 0
@@ -67,8 +66,7 @@ steps:
     pull: always
     image: golang:1.11
     commands:
-      - >-
-        "go build -v -ldflags \"-X main.version=${DRONE_TAG##v}\"
+      - "go build -v -ldflags \"-X main.version=${DRONE_TAG##v}\" \
         -a -tags netgo -o release/linux/amd64/drone-ansible"
     environment:
       CGO_ENABLED: 0
