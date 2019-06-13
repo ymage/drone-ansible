@@ -1,46 +1,5 @@
 ---
 kind: pipeline
-name: testing
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: vet
-    pull: always
-    image: golang:1.11
-    commands:
-      - go vet ./...
-    environment:
-      GO111MODULE: "on"
-    volumes:
-      - name: gopath
-        path: /go
-
-  - name: test
-    pull: always
-    image: golang:1.11
-    commands:
-      - go test -cover ./...
-    environment:
-      GO111MODULE: "on"
-    volumes:
-      - name: gopath
-        path: /go
-
-volumes:
-  - name: gopath
-    temp: {}
-
-trigger:
-  ref:
-    - refs/heads/master
-    - "refs/tags/**"
-    - "refs/pull/**"
-
----
-kind: pipeline
 name: linux-amd64
 
 platform:
@@ -49,17 +8,19 @@ platform:
 
 steps:
   - name: dryrun
-    image: plugins/docker:linux-amd64
+    image: plugins/docker
     settings:
-      build_args:
-        VERSION: ${DRONE_COMMIT_SHA:0:8}
-      dry_run: true
+      auto_tag: true
+      force_tag: true
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       repo: ymage/drone-ansible
       tags: linux-amd64
+      build_args:
+        VERSION: ${DRONE_COMMIT_SHA:0:8}
+      dry_run: true
     when:
       event:
         exclude:
@@ -70,13 +31,13 @@ steps:
     settings:
       auto_tag: true
       auto_tag_suffix: linux-amd64
-      build_args:
-        VERSION: ${DRONE_TAG##v}
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       repo: ymage/drone-ansible
+      build_args:
+        VERSION: ${DRONE_TAG##v}
     when:
       event:
         - tag
@@ -86,43 +47,4 @@ trigger:
     - refs/heads/master
     - "refs/tags/**"
     - "refs/pull/**"
-
-depends_on:
-  - testing
-
----
-kind: pipeline
-name: notifications
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: manifest
-    pull: always
-    image: plugins/manifest
-    settings:
-      auto_tag: true
-      ignore_missing: true
-      password:
-        from_secret: docker_password
-      spec: docker/manifest.tmpl
-      username:
-        from_secret: docker_username
-
-  - name: microbadger
-    pull: always
-    image: plugins/webhook
-    settings:
-      urls:
-        from_secret: microbadger_url
-
-trigger:
-  ref:
-    - refs/heads/master
-    - "refs/tags/**"
-
-depends_on:
-  - linux-amd64
 ...
