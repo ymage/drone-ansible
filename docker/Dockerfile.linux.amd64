@@ -7,26 +7,22 @@ RUN ln -s /lib /lib64 && \
       ca-certificates \
       curl \
       git \
+      mailcap \
       openssh-client \
-      libressl \
+      openssl \
       rsync \
       zip && \
     apk add --upgrade --no-cache --virtual build-dependencies \
       build-base \
       libffi-dev \
-      libressl-dev \
+      openssl-dev \
       python3-dev
 
 # Ansible installation
 COPY requirements.txt /opt/
 RUN python3 -m pip install --no-cache-dir --upgrade --requirement /opt/requirements.txt && \
     apk del build-dependencies && \
-    rm -rf /var/cache/apk/* && \
-    mkdir -p ~/.ssh && \
-    echo $'Host *\nStrictHostKeyChecking no' > ~/.ssh/config && \
-    chmod 400 ~/.ssh/config
-
-ENV PYTHONPATH=/usr/local/lib/python3.7/site-packages:$PYTHONPATH
+    rm -rf /var/cache/apk/*
 
 ADD release/linux/amd64/drone-ansible /bin/
 ENTRYPOINT ["/bin/drone-ansible"]

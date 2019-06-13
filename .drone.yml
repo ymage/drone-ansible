@@ -9,7 +9,7 @@ platform:
 steps:
   - name: vet
     pull: always
-    image: golang:1.11
+    image: golang:1.12.5-alpine3.9
     commands:
       - go vet ./...
     environment:
@@ -20,7 +20,7 @@ steps:
 
   - name: test
     pull: always
-    image: golang:1.11
+    image: golang:1.12.5-alpine3.9
     commands:
       - go test -cover ./...
     environment:
@@ -48,45 +48,12 @@ platform:
   arch: amd64
 
 steps:
-  - name: build-push
-    pull: always
-    image: golang:1.11
-    commands:
-      - "go build -v -ldflags \"-X main.version=${DRONE_COMMIT_SHA:0:8}\" \
-        -a -tags netgo -o release/linux/amd64/drone-ansible"
-    environment:
-      CGO_ENABLED: 0
-      GO111MODULE: "on"
-    when:
-      event:
-        exclude:
-          - tag
-
-  - name: build-tag
-    pull: always
-    image: golang:1.11
-    commands:
-      - "go build -v -ldflags \"-X main.version=${DRONE_TAG##v}\" \
-        -a -tags netgo -o release/linux/amd64/drone-ansible"
-    environment:
-      CGO_ENABLED: 0
-      GO111MODULE: "on"
-    when:
-      event:
-        - tag
-
-  - name: executable
-    pull: always
-    image: golang:1.11
-    commands:
-      - ./release/linux/amd64/drone-ansible --help
-
   - name: dryrun
     pull: always
     image: plugins/docker:linux-amd64
     settings:
-      daemon_off: false
-      dockerfile: docker/Dockerfile.linux.amd64
+      build_args:
+        VERSION: ${DRONE_COMMIT_SHA:0:8}
       dry_run: true
       username:
         from_secret: docker_username
@@ -96,7 +63,8 @@ steps:
       tags: linux-amd64
     when:
       event:
-        - pull_request
+        exclude:
+          - tag
 
   - name: publish
     pull: always
@@ -104,18 +72,16 @@ steps:
     settings:
       auto_tag: true
       auto_tag_suffix: linux-amd64
-      daemon_off: false
-      dockerfile: docker/Dockerfile.linux.amd64
+      build_args:
+        VERSION: ${DRONE_TAG##v}
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       repo: ymage/drone-ansible
-      debug: true
     when:
       event:
-        exclude:
-          - pull_request
+        - tag
 
 trigger:
   ref:
