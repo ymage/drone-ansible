@@ -97,6 +97,17 @@ steps:
       event:
         - pull_request
 
+  - name: Build image
+    image: plugins/docker
+    settings:
+      auto_tag: true
+      force_tag: true
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: ymage/drone-ansible
+
   - name: publish
     pull: always
     image: plugins/docker:linux-amd64
