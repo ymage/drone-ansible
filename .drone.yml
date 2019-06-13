@@ -13,7 +13,7 @@ steps:
     commands:
       - go vet ./...
     environment:
-      GO111MODULE: true
+      GO111MODULE: "on"
     volumes:
       - name: gopath
         path: /go
@@ -24,7 +24,7 @@ steps:
     commands:
       - go test -cover ./...
     environment:
-      GO111MODULE: true
+      GO111MODULE: "on"
     volumes:
       - name: gopath
         path: /go
@@ -57,7 +57,7 @@ steps:
         -a -tags netgo -o release/linux/amd64/drone-ansible"
     environment:
       CGO_ENABLED: 0
-      GO111MODULE: true
+      GO111MODULE: "on"
     when:
       event:
         exclude:
@@ -72,7 +72,7 @@ steps:
         -a -tags netgo -o release/linux/amd64/drone-ansible"
     environment:
       CGO_ENABLED: 0
-      GO111MODULE: true
+      GO111MODULE: "on"
     when:
       event:
         - tag
