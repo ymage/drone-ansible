@@ -7,7 +7,7 @@ tags:
 {{/if}}
 manifests:
   -
-    image: yamge/drone-ansible:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-amd64
+    image: ymage/drone-ansible:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}linux-amd64
     platform:
       architecture: amd64
       os: linux
