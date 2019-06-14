@@ -13,7 +13,7 @@ COPY . /go/src/app
 RUN apk add --no-cache --update \
       ca-certificates \
       git && \
-    go build -v -ldflags "-X main.version=${VERSION}" -a -tags netgo -o release/linux/amd64/drone-ansible
+    go build -v -ldflags "-X main.version=$VERSION" -a -tags netgo -o release/linux/amd64/drone-ansible
 
 # Pull base image
 FROM python:3.7.3-alpine3.9
