@@ -20,7 +20,6 @@ steps:
       tags: linux-amd64
       build_args:
         VERSION: ${DRONE_COMMIT_SHA:0:8}
-      dry_run: true
     when:
       event:
         exclude:
