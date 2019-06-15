@@ -103,24 +103,41 @@ platform:
   arch: amd64
 
 steps:
-  - name: manifest
-    pull: always
-    image: plugins/manifest
+  - name: Rocket Notification
+    image: rmilewski/drone-rocket:latest
+    when:
+      status:
+        - success
+        - failure
     settings:
-      auto_tag: true
-      ignore_missing: true
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-      spec: docker/manifest.tmpl
-
-# - name: microbadger
-#   pull: always
-#   image: plugins/webhook
-#   settings:
-#     urls:
-#       from_secret: microbadger_url
+      webhook:
+        from_secret: rocket_chat_webhook
+      channel: desordre
+      username: desordre
+      color:
+        - value: green
+          when:
+            DRONE_BUILD_STATUS: success
+        - value: red
+          when:
+            DRONE_BUILD_STATUS: failure
+      message:
+        - value: >
+            [Build #${DRONE_BUILD_NUMBER}](${DRONE_BUILD_LINK}) succeeded.
+            :thumbsup: Good job.
+          when:
+            DRONE_BUILD_STATUS: success
+        - value: >
+            [Build #${DRONE_BUILD_NUMBER}](${DRONE_BUILD_LINK}) failed.
+            :disappointed: Fix ${DRONE_COMMIT_LINK} please.
+      text: ${DRONE_COMMIT_MESSAGE}
+      fields:
+        - title: Author
+          value: ${DRONE_COMMIT_AUTHOR} / ${DRONE_COMMIT_AUTHOR_EMAIL}
+        - title: Git Repo
+          value: "[${DRONE_REPO}](${DRONE_REMOTE_URL})"
+        - title: Event
+          value: ${DRONE_BUILD_EVENT}
 
 trigger:
   ref:
@@ -129,5 +146,4 @@ trigger:
 
 depends_on:
   - linux-amd64
-
 ...
