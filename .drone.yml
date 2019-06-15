@@ -53,6 +53,7 @@ steps:
     image: plugins/docker:linux-amd64
     settings:
       daemon_off: false
+      dry_run: true
       username:
         from_secret: docker_username
       password:
