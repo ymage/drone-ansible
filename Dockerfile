@@ -1,12 +1,10 @@
-FROM golang:1.12.5-alpine3.9 as builder
+FROM golang:1.12.6-alpine3.9 as builder
 
 ARG GOOS=linux
 ARG GOARCH=amd64
 ARG CGO_ENABLED=0
 ARG GO111MODULE=on
 ARG VERSION
-
-ENV VERSION=${VERSION}
 
 WORKDIR /go/src/app
 
@@ -15,6 +13,7 @@ COPY . /go/src/app
 RUN apk add --no-cache --update \
       ca-certificates \
       git && \
+    echo ${VERSION} && \
     go build -v -ldflags "-X main.version=$VERSION" -a -tags netgo -o release/linux/amd64/drone-ansible
 
 # Pull base image
