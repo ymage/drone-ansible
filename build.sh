@@ -3,7 +3,7 @@ set -euo pipefail
 
 IMAGE=drone-ansible
 DOCKER_HUB_USER=ymage
-VERSION=2.8.1
+VERSION=2.8.2
 
 echo "Build ${IMAGE}:${VERSION}"
 
