@@ -52,14 +52,14 @@ steps:
     pull: always
     image: plugins/docker:linux-amd64
     settings:
-      daemon_off: false
-      dry_run: true
+      tags:
+        - linux-amd64
+        - latest
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       repo: ymage/drone-ansible
-      tags: linux-amd64
       build_args:
         VERSION: ${DRONE_COMMIT_SHA:0:8}
     when:
@@ -73,7 +73,6 @@ steps:
     settings:
       auto_tag: true
       auto_tag_suffix: linux-amd64
-      daemon_off: false
       username:
         from_secret: docker_username
       password:
