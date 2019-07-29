@@ -48,13 +48,14 @@ platform:
   arch: amd64
 
 steps:
-  - name: dryrun
+  - name: latest
     pull: always
     image: plugins/docker:linux-amd64
     settings:
       tags:
         - linux-amd64
         - latest
+        - ${DRONE_COMMIT_SHA}
       username:
         from_secret: docker_username
       password:
@@ -71,6 +72,9 @@ steps:
     pull: always
     image: plugins/docker:linux-amd64
     settings:
+      tags:
+        - linux-amd64
+        - latest
       auto_tag: true
       auto_tag_suffix: linux-amd64
       username:
