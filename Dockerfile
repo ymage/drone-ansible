@@ -17,7 +17,7 @@ RUN apk add --no-cache --update \
     go build -v -ldflags "-X main.version=$VERSION" -a -tags netgo -o release/linux/amd64/drone-ansible
 
 # Pull base image
-FROM python:3.7.3-alpine3.10
+FROM python:3.7.4-alpine3.10
 LABEL maintainer="Ymage"
 
 COPY --from=builder /go/src/app/release/linux/amd64/drone-ansible /bin/
