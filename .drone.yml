@@ -72,10 +72,6 @@ steps:
     pull: always
     image: plugins/docker:linux-amd64
     settings:
-      tags:
-        - linux-amd64
-        - latest
-        - ${DRONE_COMMIT_SHA}
       auto_tag: true
       auto_tag_suffix: linux-amd64
       force_tag: true
