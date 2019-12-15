@@ -9,13 +9,7 @@ COPY release/linux/amd64/drone-ansible /bin/
 RUN ln -s /lib /lib64 && \
     apk add --upgrade --no-cache \
       ca-certificates \
-      curl \
-      git \
-      mailcap \
-      openssh-client \
-      openssl \
-      rsync \
-      zip && \
+      curl && \
     apk add --upgrade --no-cache --virtual build-dependencies \
       build-base \
       libffi-dev \
@@ -30,8 +24,7 @@ COPY --from=builder /bin/drone-ansible /bin/
 COPY --from=builder /python_dependencies /python_dependencies
 COPY requirements.txt /
 
-RUN ln -s /lib /lib64 && \
-    apk add --upgrade --no-cache \
+RUN apk add --upgrade --no-cache \
       ca-certificates \
       curl \
       git \
