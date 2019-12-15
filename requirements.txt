@@ -1,8 +1,11 @@
 ansible==2.9.2
+boto3==1.10.39
 cryptography==2.8
 mitogen==0.2.9
 netaddr==0.7.19
+paramiko==2.7.1
 pip==19.3.1
 PyYAML==5.2
+requests==2.22.0
 setuptools==42.0.2
 wheel==0.33.6
