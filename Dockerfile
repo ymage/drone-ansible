@@ -1,4 +1,4 @@
-FROM golang:1.13.5-alpine3.10 as gobuilder
+FROM golang:1.13.6-alpine3.11 as gobuilder
 
 ARG GOOS=linux
 ARG GOARCH=amd64
@@ -18,7 +18,7 @@ RUN apk add --no-cache --update \
     chmod 0755 release/linux/amd64/drone-ansible
 
 # Pull base image
-FROM python:3.8.1-alpine3.10 as base
+FROM python:3.8.1-alpine3.11 as base
 FROM base as builder
 
 COPY requirements.txt /
