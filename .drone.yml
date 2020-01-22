@@ -32,13 +32,6 @@ steps:
 volumes:
   - name: gopath
     temp: {}
-
-trigger:
-  ref:
-    - refs/heads/master
-    - "refs/tags/**"
-    - "refs/pull/**"
-
 ---
 kind: pipeline
 name: linux-amd64
@@ -88,12 +81,6 @@ steps:
     when:
       event:
         - tag
-
-trigger:
-  ref:
-    - refs/heads/master
-    - "refs/tags/**"
-    - "refs/pull/**"
 
 depends_on:
   - testing
