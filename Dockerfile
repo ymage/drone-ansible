@@ -3,7 +3,6 @@ FROM golang:1.13.6-alpine3.11 as gobuilder
 ARG GOOS=linux
 ARG GOARCH=amd64
 ARG CGO_ENABLED=0
-ARG GO111MODULE=on
 ARG VERSION
 
 WORKDIR /go/src/app

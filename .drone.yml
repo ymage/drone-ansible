@@ -12,8 +12,6 @@ steps:
     image: golang:1.13.6
     commands:
       - go vet ./...
-    environment:
-      GO111MODULE: "on"
     volumes:
       - name: gopath
         path: /go
@@ -23,8 +21,6 @@ steps:
     image: golang:1.13.6
     commands:
       - go test -cover ./...
-    environment:
-      GO111MODULE: "on"
     volumes:
       - name: gopath
         path: /go
@@ -45,6 +41,7 @@ steps:
     pull: always
     image: plugins/docker:linux-amd64
     settings:
+      dry_run: true
       tags:
         - latest
         - ${DRONE_COMMIT_SHA}
