@@ -8,4 +8,4 @@ pip==20.0.2
 PyYAML==5.3
 requests==2.22.0
 setuptools==45.1.0
-wheel==0.33.6
+wheel==0.34.2
