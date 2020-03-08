@@ -17,8 +17,8 @@ RUN apk add --no-cache --update \
     chmod 0755 release/linux/amd64/drone-ansible
 
 # Pull base image
-FROM python:3.8.1-alpine3.11 as base
-FROM base as builder
+FROM python:3.8.2-alpine3.11 as base
+FROM base as pybuilder
 
 COPY requirements.txt /
 
@@ -37,8 +37,8 @@ RUN ln -s /lib /lib64 && \
 FROM base
 LABEL maintainer="Ymage"
 COPY --from=gobuilder /go/src/app/release/linux/amd64/drone-ansible /bin/
-COPY --from=builder /python_dependencies /python_dependencies
-COPY --from=builder /requirements.txt /requirements.txt
+COPY --from=pybuilder /python_dependencies /python_dependencies
+COPY --from=pybuilder /requirements.txt /requirements.txt
 
 RUN apk add --upgrade --no-cache \
       ca-certificates \
