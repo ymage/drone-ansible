@@ -44,7 +44,6 @@ steps:
       dry_run: true
       tags:
         - latest
-        - ${DRONE_COMMIT_SHA}
       username:
         from_secret: docker_username
       password:
@@ -65,6 +64,8 @@ steps:
         - ${DRONE_COMMIT_SHA}
         - ${DRONE_SEMVER_MAJOR}
         - ${DRONE_SEMVER_MAJOR}.${DRONE_SEMVER_MINOR}
+        - ${DRONE_SEMVER_MAJOR}.${DRONE_SEMVER_MINOR}.${DRONE_SEMVER_PATCH}
+        - ${DRONE_SEMVER}
         - ${DRONE_SEMVER_SHORT}
         - latest
       force_tag: true
