@@ -17,7 +17,7 @@ RUN apk add --no-cache --update \
     chmod 0755 release/linux/amd64/drone-ansible
 
 # Pull base image
-FROM python:3.8.2-alpine3.11 as base
+FROM alpine:3.11.3 as base
 FROM base as pybuilder
 
 COPY requirements.txt /
@@ -31,6 +31,7 @@ RUN ln -s /lib /lib64 && \
       libffi-dev \
       libressl-dev \
       python3-dev && \
+    python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
     mkdir -p /python_dependencies && \
     python3 -m pip wheel --wheel-dir=/python_dependencies --no-cache-dir --requirement /requirements.txt
 
@@ -46,6 +47,7 @@ RUN apk add --upgrade --no-cache \
       git \
       openssh-client \
       libressl \
+      python3 \
       rsync \
       zip && \
     python3 -m pip install --no-cache-dir --no-index --find-links=/python_dependencies --requirement /requirements.txt && \
