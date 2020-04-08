@@ -9,7 +9,7 @@ platform:
 steps:
   - name: vet
     pull: always
-    image: golang:1.13.7
+    image: golang:1.14.1
     commands:
       - go vet ./...
     volumes:
@@ -39,7 +39,7 @@ platform:
 steps:
   - name: latest
     pull: always
-    image: plugins/docker:linux-amd64
+    image: plugins/docker:18.09.1-linux-amd64
     settings:
       dry_run: true
       tags:
@@ -127,11 +127,6 @@ steps:
           value: "[${DRONE_REPO}](${DRONE_REMOTE_URL})"
         - title: Event
           value: ${DRONE_BUILD_EVENT}
-
-trigger:
-  ref:
-    - refs/heads/master
-    - "refs/tags/**"
 
 depends_on:
   - linux-amd64
