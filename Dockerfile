@@ -1,4 +1,4 @@
-FROM golang:1.14.1-alpine3.11 as gobuilder
+FROM golang:1.14.2-alpine3.11 as gobuilder
 
 ARG GOOS=linux
 ARG GOARCH=amd64
@@ -12,12 +12,11 @@ COPY . /go/src/app
 RUN apk add --no-cache --update \
       ca-certificates \
       git && \
-    echo ${VERSION} && \
     go build -v -ldflags "-X main.version=$VERSION" -a -tags netgo -o release/linux/amd64/drone-ansible && \
     chmod 0755 release/linux/amd64/drone-ansible
 
 # Pull base image
-FROM alpine:3.11.3 as base
+FROM alpine:3.11.5 as base
 FROM base as pybuilder
 
 COPY requirements.txt /
