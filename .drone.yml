@@ -61,7 +61,6 @@ steps:
     image: ymage/drone-kaniko:0.19.0
     settings:
       repo: ymage/drone-ansible
-      cache: true
       tags:
         - ${DRONE_COMMIT_SHA}
         - ${DRONE_SEMVER_MAJOR}
