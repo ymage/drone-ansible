@@ -15,11 +15,15 @@ RUN apk add --no-cache --update \
     go build -v -ldflags "-X main.version=$VERSION" -a -tags netgo -o release/linux/amd64/drone-ansible && \
     chmod 0755 release/linux/amd64/drone-ansible
 
-# Pull base image
 FROM alpine:3.11.5 as base
 FROM base as pybuilder
 
-COPY requirements.txt /
+ENV LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    VIRTUAL_ENV=/opt/venv \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 RUN ln -s /lib /lib64 && \
     apk add --upgrade --no-cache \
@@ -29,16 +33,31 @@ RUN ln -s /lib /lib64 && \
       build-base \
       libffi-dev \
       libressl-dev \
-      python3-dev && \
-    python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    mkdir -p /python_dependencies && \
-    python3 -m pip wheel --wheel-dir=/python_dependencies --no-cache-dir --requirement /requirements.txt
+      python3-dev
+
+WORKDIR /build
+
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+COPY requirements.txt /
+RUN python3 -m pip install --no-cache-dir --upgrade --requirement /requirements.txt
 
 FROM base
-LABEL maintainer="Ymage"
+LABEL maintainer="Ymage (fork maintainer)"
+LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" \
+      org.label-schema.name="Drone Ansible" \
+      org.label-schema.vendor="Drone.IO Community" \
+      org.label-schema.schema-version="1.0"
+
 COPY --from=gobuilder /go/src/app/release/linux/amd64/drone-ansible /bin/
-COPY --from=pybuilder /python_dependencies /python_dependencies
-COPY --from=pybuilder /requirements.txt /requirements.txt
+COPY --from=pybuilder /opt/venv /opt/venv
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8
 
 RUN apk add --upgrade --no-cache \
       ca-certificates \
@@ -49,8 +68,6 @@ RUN apk add --upgrade --no-cache \
       python3 \
       rsync \
       zip && \
-    python3 -m pip install --no-cache-dir --no-index --find-links=/python_dependencies --requirement /requirements.txt && \
-    rm -fR /python_dependencies /requirements.txt && \
     mkdir -p ~/.ssh && \
     echo $'Host *\nStrictHostKeyChecking no' > ~/.ssh/config && \
     chmod 400 ~/.ssh/config
