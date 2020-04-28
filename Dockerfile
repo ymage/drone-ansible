@@ -56,6 +56,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/venv/bin:$PATH" \
     PYTHONPATH=/opt/venv/lib/python3.8/site-packages:$PYTHONPATH \
     ANSIBLE_STRATEGY_PLUGINS=/opt/venv/lib/python3.8/site-packages/ansible_mitogen/plugins/strategy \
+    ANSIBLE_STRATEGY=mitogen_linear \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
