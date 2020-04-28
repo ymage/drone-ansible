@@ -35,8 +35,6 @@ RUN ln -s /lib /lib64 && \
       libressl-dev \
       python3-dev
 
-WORKDIR /build
-
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
@@ -56,6 +54,8 @@ COPY --from=pybuilder /opt/venv /opt/venv
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH" \
+    PYTHONPATH=/opt/venv/lib/python3.8/site-packages:$PYTHONPATH \
+    ANSIBLE_STRATEGY_PLUGINS=/opt/venv/lib/python3.8/site-packages/ansible_mitogen/plugins/strategy \
     LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
@@ -71,7 +71,5 @@ RUN apk add --upgrade --no-cache \
     mkdir -p ~/.ssh && \
     echo $'Host *\nStrictHostKeyChecking no' > ~/.ssh/config && \
     chmod 400 ~/.ssh/config
-
-ENV PYTHONPATH=/usr/local/lib/python3.8/site-packages:$PYTHONPATH
 
 ENTRYPOINT ["/bin/drone-ansible"]
