@@ -1,39 +1,14 @@
-# Pull base image
-FROM python:3.8.0-alpine3.10 as base
-FROM base as builder
-LABEL maintainer="Ymage"
+FROM plugins/base:linux-amd64
 
-COPY requirements.txt /
-COPY release/linux/amd64/drone-ansible /bin/
+LABEL maintainer="Drone.IO Community <drone-dev@googlegroups.com>" \
+  org.label-schema.name="Drone Ansible" \
+  org.label-schema.vendor="Drone.IO Community" \
+  org.label-schema.schema-version="1.0"
 
-RUN ln -s /lib /lib64 && \
-    apk add --upgrade --no-cache \
-      ca-certificates \
-      curl && \
-    apk add --upgrade --no-cache --virtual build-dependencies \
-      build-base \
-      libffi-dev \
-      openssl-dev \
-      python3-dev && \
-    mkdir -p /python_dependencies && \
-    python3 -m pip wheel --wheel-dir=/python_dependencies --no-cache-dir --requirement /requirements.txt && \
-    chmod 0755 /bin/drone-ansible
+RUN apk add --no-cache bash git curl rsync openssh-client py3-pip py3-requests py3-boto3@testing py3-paramiko python3-dev libffi-dev libressl-dev libressl build-base && \
+  pip3 install -U pip && \
+  pip3 install ansible==2.8.4 && \
+  apk del --no-cache python3-dev libffi-dev libressl-dev build-base
 
-FROM base
-COPY --from=builder /bin/drone-ansible /bin/
-COPY --from=builder /python_dependencies /python_dependencies
-COPY requirements.txt /
-
-RUN apk add --upgrade --no-cache \
-      ca-certificates \
-      curl \
-      git \
-      mailcap \
-      openssh-client \
-      openssl \
-      rsync \
-      zip && \
-   python3 -m pip install --no-cache-dir --no-index --find-links=/python_dependencies --requirement /requirements.txt && \
-   rm -fR /python_dependencies /requirements.txt
-
+ADD release/linux/amd64/drone-ansible /bin/
 ENTRYPOINT ["/bin/drone-ansible"]
