@@ -68,6 +68,7 @@ RUN apk add --upgrade --no-cache \
       libressl \
       python3 \
       rsync \
+      sudo \
       zip && \
     mkdir -p ~/.ssh && \
     echo $'Host *\nStrictHostKeyChecking no' > ~/.ssh/config && \
