@@ -15,7 +15,7 @@ RUN apk add --no-cache --update \
     go build -v -ldflags "-X main.version=$VERSION" -a -tags netgo -o release/linux/amd64/drone-ansible && \
     chmod 0755 release/linux/amd64/drone-ansible
 
-FROM alpine:3.11.5 as base
+FROM alpine:3.11.6 as base
 FROM base as pybuilder
 
 ENV LC_ALL=en_US.UTF-8 \
