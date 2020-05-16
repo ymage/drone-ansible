@@ -38,7 +38,7 @@ platform:
 
 steps:
   - name: build-dry-run
-    image: ymage/drone-kaniko:0.19.0
+    image: ymage/drone-kaniko:0.22.0
     pull: always
     settings:
       repo: ymage/drone-ansible
@@ -57,7 +57,7 @@ steps:
           - tag
 
   - name: build-publish
-    image: ymage/drone-kaniko:0.19.0
+    image: ymage/drone-kaniko:0.22.0
     pull: always
     settings:
       repo: ymage/drone-ansible
