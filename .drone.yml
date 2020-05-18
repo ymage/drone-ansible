@@ -10,7 +10,7 @@ platform:
 steps:
   - name: vet
     pull: always
-    image: golang:1.14.2
+    image: golang:1.14.3
     commands:
       - go vet ./...
     volumes:
