@@ -10,6 +10,6 @@ paramiko==2.7.1
 pip==20.1
 PyYAML==5.3.1
 requests==2.23.0
-setuptools==46.3.1
+setuptools==46.4.0
 urllib3==1.25.9
 wheel==0.34.2
